@@ -13,13 +13,13 @@ TOOLS = [
         "function": {
             "name": "terminal",
             "description": (
-                "Terminalde bir shell komutu çalıştırır ve çıktısını döner. "
-                f"Çalışma dizini: {AGENT_WORKSPACE}"
+                "Runs a shell command in the terminal and returns the output. "
+                f"Working directory: {AGENT_WORKSPACE}"
             ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "command": {"type": "string", "description": "Çalıştırılacak shell komutu"},
+                    "command": {"type": "string", "description": "The shell command to execute"},
                 },
                 "required": ["command"],
             },
@@ -28,29 +28,29 @@ TOOLS = [
     {
         "type": "function",
         "function": {
-            "name": "dosya_oku",
-            "description": "Bir dosyanın içeriğini okur.",
+            "name": "file_read",
+            "description": "Reads the content of a file.",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "yol": {"type": "string", "description": "Dosya yolu"},
+                    "path": {"type": "string", "description": "File path"},
                 },
-                "required": ["yol"],
+                "required": ["path"],
             },
         },
     },
     {
         "type": "function",
         "function": {
-            "name": "dosya_yaz",
-            "description": "Bir dosyaya içerik yazar; dosya yoksa oluşturur, varsa üzerine yazar.",
+            "name": "file_write",
+            "description": "Writes content to a file; creates the file if it doesn't exist, overwrites if it does.",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "yol": {"type": "string", "description": "Dosya yolu"},
-                    "icerik": {"type": "string", "description": "Dosyaya yazılacak içerik"},
+                    "path": {"type": "string", "description": "File path"},
+                    "content": {"type": "string", "description": "Content to write to the file"},
                 },
-                "required": ["yol", "icerik"],
+                "required": ["path", "content"],
             },
         },
     },
@@ -69,52 +69,51 @@ def _terminal(command: str) -> str:
             cwd=AGENT_WORKSPACE,
         )
         output = (result.stdout + result.stderr).strip()
-        return output or "(komut çıktı üretmedi)"
+        return output or "(command produced no output)"
     except subprocess.TimeoutExpired:
-        return "Hata: Komut 30 saniyede tamamlanamadı."
+        return "Error: Command did not complete within 30 seconds."
     except Exception as e:
-        return f"Hata: {e}"
+        return f"Error: {e}"
 
 
-def _dosya_oku(yol: str) -> str:
+def _file_read(path: str) -> str:
     try:
-        with open(yol, encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             return f.read()
     except Exception as e:
-        return f"Hata: {e}"
+        return f"Error: {e}"
 
 
-def _dosya_yaz(yol: str, icerik: str) -> str:
+def _file_write(path: str, content: str) -> str:
     try:
-        dizin = os.path.dirname(yol)
-        if dizin:
-            os.makedirs(dizin, exist_ok=True)
-        with open(yol, "w", encoding="utf-8") as f:
-            f.write(icerik)
-        return f"Başarıyla yazıldı: {yol}"
+        directory = os.path.dirname(path)
+        if directory:
+            os.makedirs(directory, exist_ok=True)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(content)
+        return f"Successfully written: {path}"
     except Exception as e:
-        return f"Hata: {e}"
+        return f"Error: {e}"
 
 
 _TOOL_MAP = {
     "terminal": lambda a: _terminal(a["command"]),
-    "dosya_oku": lambda a: _dosya_oku(a["yol"]),
-    "dosya_yaz": lambda a: _dosya_yaz(a["yol"], a["icerik"]),
+    "file_read": lambda a: _file_read(a["path"]),
+    "file_write": lambda a: _file_write(a["path"], a["content"]),
 }
 
 
 class Agent:
     """
-    Tool-calling agentic loop. Her turda modeli çağırır; model tool istiyorsa
-    çalıştırır ve history'ye ekleyerek döngüye devam eder. Model düz metin
-    yanıt verince loop sona erer.
+    Tool-calling agentic loop for wellness analysis. Each turn calls the model; if the model requests a tool,
+    executes it and adds to history, continuing the loop. When the model provides plain text response, the loop ends.
 
-    calistir() bir Generator'dür ve her olay için bir dict yield eder:
+    calistir() is a Generator that yields a dict for each event:
       {"type": "step_start", "step": int}
-      {"type": "thinking",   "content": str}   — tool call öncesi model metni
+      {"type": "thinking",   "content": str}   — model text before tool call
       {"type": "tool_call",  "name": str, "args": dict}
       {"type": "tool_result","name": str, "result": str}
-      {"type": "text",       "content": str}   — son yanıt
+      {"type": "text",       "content": str}   — final response
       {"type": "done"}
     """
 
@@ -141,7 +140,7 @@ class Agent:
 
             msg = response.choices[0].message
 
-            # History'e eklenecek asistan mesajı
+            # Assistant message to add to history
             history_msg: dict = {"role": "assistant"}
             if msg.content:
                 history_msg["content"] = msg.content
@@ -160,7 +159,7 @@ class Agent:
             self.history.append(history_msg)
 
             if msg.content:
-                # Tool call varsa bu metin "düşünme" sürecini yansıtır
+                # If there are tool calls, this text reflects the "thinking" process
                 kind = "thinking" if msg.tool_calls else "text"
                 yield {"type": kind, "content": msg.content}
 
@@ -178,7 +177,7 @@ class Agent:
                 yield {"type": "tool_call", "name": name, "args": args}
 
                 fn = _TOOL_MAP.get(name)
-                result = fn(args) if fn else f"Bilinmeyen araç: {name}"
+                result = fn(args) if fn else f"Unknown tool: {name}"
 
                 yield {"type": "tool_result", "name": name, "result": result}
 

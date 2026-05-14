@@ -25,7 +25,7 @@ def chat():
     data = request.get_json(silent=True) or {}
     system_instructions = data.get("system_instructions", "")
     user_prompt = data.get("user_prompt", "").strip()
-    model = data.get("model", "qwen2.5-coder:3b")
+    model = data.get("model", "qwen2.5-coder:7b")
 
     if not user_prompt:
         return {"error": "user_prompt bos olamaz"}, 400
@@ -54,7 +54,7 @@ def asistan_sayfasi():
 def asistan_yeni():
     data = request.get_json(silent=True) or {}
     system_instructions = data.get("system_instructions", "Sen yardımsever bir asistansın.")
-    model = data.get("model", "qwen2.5-coder:3b")
+    model = data.get("model", "qwen2.5-coder:7b")
 
     if model not in ALLOWED_MODELS:
         return {"error": "Geçersiz model"}, 400
@@ -102,7 +102,7 @@ def agent_yeni():
         "system_instructions",
         "Sen bir kodlama agentisin. Görevleri tamamlamak için araçlarını kullan.",
     )
-    model = data.get("model", "qwen2.5-coder:3b")
+    model = data.get("model", "qwen2.5-coder:7b")
 
     if model not in ALLOWED_MODELS:
         return {"error": "Geçersiz model"}, 400

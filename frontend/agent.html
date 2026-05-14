@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kodlama Agenti</title>
+  <title>Healing KB Agent</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -349,8 +349,8 @@
 <body>
   <div class="card">
     <div class="header">
-      <h1>Kodlama Agenti</h1>
-      <span class="badge">TOOL USE LOOP</span>
+      <h1>Healing KB Agent</h1>
+      <span class="badge">WELLNESS ANALYSIS</span>
     </div>
 
     <!-- Kurulum -->
@@ -364,25 +364,25 @@
       </div>
       <div>
         <label for="system">System Instructions</label>
-        <textarea id="system">Sen bir kodlama agentisin. Görevleri tamamlamak için terminal, dosya okuma ve dosya yazma araçlarını kullan. Türkçe yanıt ver.</textarea>
+        <textarea id="system">You are a Healing KB agent. Use your tools (terminal, file_read, file_write) to complete tasks for wellness analysis and healing support. Provide helpful insights about emotional patterns and health conditions.</textarea>
       </div>
-      <button id="baslatBtn" onclick="agentBaslat()">Agenti Başlat</button>
+      <button id="baslatBtn" onclick="agentBaslat()">Start Agent</button>
     </div>
 
     <!-- Agent çalışma alanı -->
     <div id="agent-section">
       <div class="session-info">
         <span id="sessionLabel"></span>
-        <button id="yeniBtn" onclick="sifirla()">Yeni Oturum</button>
+        <button id="yeniBtn" onclick="sifirla()">New Session</button>
       </div>
 
       <div id="messages">
-        <span class="empty-hint">Agent hazır. Bir görev verin.</span>
+        <span class="empty-hint">Agent ready. Describe a wellness analysis task.</span>
       </div>
 
       <div class="input-row">
-        <textarea id="userPrompt" placeholder="Görevi yazın... (Shift+Enter yeni satır)" onkeydown="enterGonder(event)"></textarea>
-        <button id="gonderBtn" onclick="gorevVer()">Çalıştır</button>
+        <textarea id="userPrompt" placeholder="Describe your wellness analysis task... (Shift+Enter for new line)" onkeydown="enterGonder(event)"></textarea>
+        <button id="gonderBtn" onclick="gorevVer()">Run</button>
       </div>
     </div>
   </div>
@@ -393,8 +393,8 @@
     // ── Tool ikonları ──────────────────────────────────────
     const TOOL_ICONS = {
       terminal:   "⚡",
-      dosya_oku:  "📖",
-      dosya_yaz:  "✏️",
+      file_read:  "📖",
+      file_write: "✏️",
     };
 
     // ── Başlat ─────────────────────────────────────────────
@@ -404,7 +404,7 @@
       const btn = document.getElementById("baslatBtn");
 
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>Başlatılıyor...';
+      btn.innerHTML = '<span class="spinner"></span>Starting...';
 
       try {
         const res = await fetch("/api/agent/yeni", {
@@ -421,12 +421,12 @@
         const sec = document.getElementById("agent-section");
         sec.style.display = "flex";
         document.getElementById("sessionLabel").textContent =
-          `Model: ${model}  ·  Session: ${sessionId.slice(0, 8)}…`;
+          `Model: ${model}  ·  Session: ${sessionId.slice(0, 8)}...`;
         document.getElementById("userPrompt").focus();
       } catch (err) {
-        alert("Agent başlatılamadı: " + err.message);
+        alert("Failed to start agent: " + err.message);
         btn.disabled = false;
-        btn.textContent = "Agenti Başlat";
+        btn.textContent = "Start Agent";
       }
     }
 
@@ -485,7 +485,7 @@
         ekleHata(err.message);
       } finally {
         btn.disabled = false;
-        btn.textContent = "Çalıştır";
+        btn.textContent = "Run";
         promptEl.focus();
       }
 
@@ -500,7 +500,7 @@
 
             const lbl = document.createElement("div");
             lbl.className = "step-label";
-            lbl.textContent = `Adım ${stepCount}`;
+            lbl.textContent = `Step ${stepCount}`;
             stepBlock.appendChild(lbl);
 
             getMsgs().appendChild(stepBlock);
@@ -551,7 +551,7 @@
             const icon = TOOL_ICONS[ev.name] || "🔧";
             const hdr = document.createElement("div");
             hdr.className = "tool-result-header";
-            hdr.innerHTML = `<span>✓</span> ${icon} ${ev.name} sonucu`;
+            hdr.innerHTML = `<span>✓</span> ${icon} ${ev.name} result`;
             wrap.appendChild(hdr);
 
             const body = document.createElement("div");

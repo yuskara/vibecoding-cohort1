@@ -1,29 +1,33 @@
-# Proje Adı
+# Healing KB
 
-vbl1
+## Project Overview
 
-## Proje Hakkında
+Healing KB is an intelligent wellness knowledge platform designed to identify relationships between emotional trauma, mental health challenges, and physical health conditions. The system combines structured medical/wellness information with AI-assisted interpretation to help users better understand underlying emotional patterns and healing pathways.
 
-Bu proje, çeşitli Python modüllerinden oluşan bir yazılım uygulamasıdır. Projede agent ve asistan dosyaları ile, front-end tarafında ise HTML dosyaları ile kullanıcı ara yüzleri oluşturulmuştur.
+The platform organizes conditions into categorized knowledge modules and provides guided insights, trauma associations, therapeutic recommendations, and progress tracking tools.
 
-## Kurulum
+## About This Project
 
-Projeyi çalıştırmak için gereksinim dosyasındakı paketlerin kurulması gerekmektedir. Bunun için:
+This project consists of various Python modules forming a software application. It includes agent and assistant files, with front-end user interfaces created using HTML files in the `frontend` folder.
+
+## Installation
+
+To run the project, you need to install the packages listed in the requirements file. To do this:
 
 ```
 pip install -r requirements.txt
 ```
 
-komutunu çalıştırarak gerekli tüm bağımlılıkları yükleyebilirsiniz.
+Run this command to install all necessary dependencies.
 
-## Kullanım
+## Usage
 
-Proje, arka planda `app.py`, `agent.py`, `asistan.py` ve `llm.py` Python dosyaları ve ön yüzde `frontend` klasöründeki HTML dosyaları ile çalışmaktadır. Her bir bileşen spesifik işlemler için tasarlanmıştır.
+The project runs with backend Python files `app.py`, `agent.py`, `asistan.py`, and `llm.py`, and frontend HTML files in the `frontend` folder. Each component is designed for specific operations.
 
-## Katkıda Bulunma
+## Contributing
 
-Katkıda bulunmak isteyenler standart bir pull request süreci üzerinden projeye katkıda bulunabilirler.
+Contributors can contribute to the project through a standard pull request process.
 
-## Lisans
+## License
 
-Bu projeye ait lisans bilgileri burada yer alacaktır.
+License information for this project will be provided here.
