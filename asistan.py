@@ -4,7 +4,7 @@ from llm import client
 
 
 class Asistan:
-    def __init__(self, system_instructions: str, model: str = "gpt-4.1-mini"):
+    def __init__(self, system_instructions: str, model: str = "qwen2.5-coder:3b"):
         self.model = model
         self.history: list[dict] = [
             {"role": "system", "content": system_instructions}

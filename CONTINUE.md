@@ -1,10 +1,10 @@
-# CLAUDE.md
+# CONTINUE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to CONTINUE Code (CONTINUE.ai/code) when working with code in this repository.
 
 ## ZORUNLU KURAL: Bu Dosyaları Her Zaman Güncelle
 
-**Her kod değişikliğinin ardından, commit yapmadan önce `CLAUDE.md` ve `AGENTS.md` dosyalarını güncellemelisin.**
+**Her kod değişikliğinin ardından, commit yapmadan önce `CONTINUE.md` ve `AGENTS.md` dosyalarını güncellemelisin.**
 
 Güncelleme gerektiren durumlar:
 - Yeni dosya veya modül eklenmesi
@@ -13,7 +13,7 @@ Güncelleme gerektiren durumlar:
 - Mevcut bir modülün sorumluluğunun değişmesi
 - Yeni bağımlılık veya ortam değişkeni eklenmesi
 
-Güncelleme yapmazsan mimari bilgisi eskir ve gelecekteki Claude oturumları yanlış varsayımlarla çalışır.
+Güncelleme yapmazsan mimari bilgisi eskir ve gelecekteki CONTINUE oturumları yanlış varsayımlarla çalışır.
 
 ---
 
