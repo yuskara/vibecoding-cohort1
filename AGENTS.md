@@ -22,7 +22,7 @@ Bu dosyaları güncellemeden commit atmak yasaktır.
 
 ```
 app.py                  # Flask uygulaması; routing, doğrulama, oturum yönetimi
-llm.py                  # OpenAI istemcisi; hafızasız stream_llm() fonksiyonu
+llm.py                  # OpenAI/OLLAMA istemcisi; hafızasız stream_llm() fonksiyonu
 asistan.py              # Asistan sınıfı; conversation history + stream_sohbet()
 agent.py                # Agent sınıfı; tool-calling agentic loop + calistir() generator
 frontend/
@@ -30,12 +30,12 @@ frontend/
   asistan.html          # Asistan arayüzü: çok turlu, baloncuklu sohbet sayfası
   agent.html            # Agent arayüzü: tool call'ları ve adımları görsel gösterim
 requirements.txt        # Python bağımlılıkları
-.env                    # Yerel sırlar (commit edilmez); OPENAI_API_KEY buraya
+.env                    # Yerel sırlar (commit edilmez); OPENAI_API_KEY / OLLAMA_API_BASE buraya
 CLAUDE.md               # Claude Code'a mimari rehberlik
 AGENTS.md               # Bu dosya; geliştirici ve ajan kuralları
 ```
 
-Backend routing ve doğrulama `app.py`'de kalır. Provider'a özgü LLM çağrıları `llm.py`, `asistan.py` veya `agent.py`'de kalır. Statik dosyalar `frontend/` altına eklenir.
+Backend routing ve doğrulama `app.py`'de kalır. Provider'a özgü LLM çağrıları `llm.py`, `asistan.py` veya `agent.py`'de kalır. Statik dosyalar `frontend/` altına eklenir. Currently configured to use local Ollama with `qwen2.5-coder:3b` model.
 
 ---
 

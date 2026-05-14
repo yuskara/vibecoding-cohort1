@@ -118,7 +118,7 @@ class Agent:
       {"type": "done"}
     """
 
-    def __init__(self, system_instructions: str, model: str = "gpt-4.1-mini"):
+    def __init__(self, system_instructions: str, model: str = "llama2"):
         self.model = model
         self.history: list[dict] = [
             {"role": "system", "content": system_instructions}

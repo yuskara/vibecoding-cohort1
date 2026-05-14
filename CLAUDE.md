@@ -30,7 +30,7 @@ pip install -r requirements.txt
 flask --app app run --debug
 ```
 
-`.env` dosyasında `OPENAI_API_KEY` tanımlı olmalıdır.
+`.env` dosyasında `OPENAI_API_KEY` veya yerel Ollama için `OLLAMA_API_BASE=http://127.0.0.1:11434/v1` tanımlı olmalıdır.
 
 ---
 
@@ -46,7 +46,7 @@ Flask backend + vanilla JS frontend. Üç ayrı sayfa sunar:
 
 ### Dosya Sorumlulukları
 
-- **`app.py`** — Flask uygulaması. Routing, model doğrulaması, asistan ve agent oturum yönetimi.
+- **`app.py`** — Flask uygulaması. Routing, model doğrulaması, asistan ve agent oturum yönetimi. Currently uses `qwen2.5-coder:3b` model from local Ollama.
 - **`llm.py`** — OpenAI istemcisi kurulumu ve `stream_llm()` fonksiyonu. Tek seferlik, history'siz.
 - **`asistan.py`** — `Asistan` sınıfı. Conversation history tutan, `sohbet()` ve `stream_sohbet()` metodları.
 - **`agent.py`** — `Agent` sınıfı. Tool-calling agentic loop; `calistir()` generator'ı her adımda event dict'i yield eder. Tool'lar: `terminal`, `dosya_oku`, `dosya_yaz`.
@@ -89,7 +89,7 @@ Flask backend + vanilla JS frontend. Üç ayrı sayfa sunar:
 
 ### Kritik Noktalar
 
-- Model doğrulaması `app.py`'deki `ALLOWED_MODELS` set'i üzerinden yapılır; yeni model eklendiğinde hem burası hem `index.html`, `asistan.html` ve `agent.html` içindeki `<select>` güncellenmeli.
+- Model doğrulaması `app.py`'deki `ALLOWED_MODELS` set'i üzerinden yapılır. Currently set to `{"qwen2.5-coder:3b"}` for local Ollama usage. When models are changed, update both backend `ALLOWED_MODELS` and all frontend `<select>` elements in `index.html`, `asistan.html`, and `agent.html`.
 - `llm.py` modül yüklendiğinde `client = OpenAI()` oluşturulur; `OPENAI_API_KEY` `.env`'de yoksa uygulama başlamaz.
 - `_asistanlar` ve `_agentlar` dict'leri sunucu hafızasındadır; sunucu yeniden başlatılınca tüm oturumlar sıfırlanır.
 - Asistan yanıtları `text/plain`, agent yanıtları `application/x-ndjson` olarak stream edilir.
