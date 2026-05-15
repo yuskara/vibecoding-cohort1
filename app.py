@@ -1,13 +1,15 @@
 import json
+import os
 import uuid
 from flask import Flask, Response, request, send_from_directory, stream_with_context
 from llm import stream_llm
 from asistan import Asistan
 from agent import Agent
 
-app = Flask(__name__, static_folder="frontend")
+FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "frontend")
+app = Flask(__name__, static_folder=FRONTEND_DIR)
 
-ALLOWED_MODELS = {"qwen2.5-coder:3b", "qwen2.5-coder:7b"}
+ALLOWED_MODELS = {"qwen2.5-coder:7b", "qwen2.5-coder:3b"}
 # Aktif asistan oturumları: session_id -> Asistan nesnesi
 _asistanlar: dict[str, Asistan] = {}
 
@@ -17,7 +19,7 @@ _agentlar: dict[str, Agent] = {}
 
 @app.route("/")
 def index():
-    return send_from_directory("frontend", "index.html")
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
 
 @app.route("/api/chat", methods=["POST"])
@@ -46,8 +48,9 @@ def chat():
 
 
 @app.route("/asistan")
+@app.route("/asistan.html")
 def asistan_sayfasi():
-    return send_from_directory("frontend", "asistan.html")
+    return send_from_directory(FRONTEND_DIR, "asistan.html")
 
 
 @app.route("/api/asistan/yeni", methods=["POST"])
@@ -91,8 +94,9 @@ def asistan_sohbet():
 
 
 @app.route("/agent")
+@app.route("/agent.html")
 def agent_sayfasi():
-    return send_from_directory("frontend", "agent.html")
+    return send_from_directory(FRONTEND_DIR, "agent.html")
 
 
 @app.route("/api/agent/yeni", methods=["POST"])
