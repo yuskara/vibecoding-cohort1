@@ -24,7 +24,7 @@ Committing without updating these files is prohibited.
 app.py                  # Flask application; routing, validation, session management for Healing KB
 llm.py                  # OpenAI/Ollama client; stateless stream_llm() function for wellness queries
 asistan.py              # Assistant class; conversation history + stream_sohbet() for user interactions
-agent.py                # Agent class; tool-calling agentic loop + calistir() generator for wellness analysis
+agent.py                # Agent class; tool-calling agentic loop + calistir() generator for wellness analysis. Includes `search_supabase` to query Supabase healing knowledge base.
 frontend/
   index.html            # LLM interface: single prompt/response page for quick wellness insights
   asistan.html          # Assistant interface: multi-turn, bubble chat for guided healing conversations

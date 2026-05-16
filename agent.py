@@ -4,12 +4,11 @@ import subprocess
 from typing import Iterator
 
 from llm import client
-from backend.tools.search_onenote import SEARCH_ONENOTE_TOOL, _search_onenote
+from backend.tools.db import get_all_conditions, search_conditions_by_tag
 
 AGENT_WORKSPACE = "/tmp/agent_workspace"
 
 TOOLS = [
-    SEARCH_ONENOTE_TOOL,
     {
         "type": "function",
         "function": {
@@ -56,6 +55,21 @@ TOOLS = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_supabase",
+            "description": "Searches the Supabase healing knowledge base for conditions by tag.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string", "description": "Search term for conditions or tags."},
+                    "max_results": {"type": "integer", "description": "Maximum number of results to return.", "default": 5},
+                },
+                "required": ["query"],
+            },
+        },
+    },
 ]
 
 
@@ -98,11 +112,66 @@ def _file_write(path: str, content: str) -> str:
         return f"Error: {e}"
 
 
+def _search_supabase(query: str, max_results: int = 5) -> str:
+    query = query.strip()
+    if not query:
+        return "Error: query cannot be empty."
+
+    max_results = min(max_results or 5, 10)
+    results = []
+
+    try:
+        response = search_conditions_by_tag(query)
+        results = response.data or []
+    except Exception:
+        results = []
+
+    if not results:
+        try:
+            response = get_all_conditions()
+            all_conditions = response.data or []
+        except Exception as e:
+            return f"Error: Supabase query failed — {e}"
+
+        lower_query = query.lower()
+        for condition in all_conditions:
+            text_parts = [
+                str(condition.get("condition_name", "")),
+                str(condition.get("description", "")),
+                " ".join(condition.get("tags", []) or []),
+                " ".join(
+                    str(theme.get("theme_name", ""))
+                    for theme in condition.get("conflict_themes", []) or []
+                ),
+                " ".join(
+                    str(org.get("display_name", "") or org.get("organ_name", ""))
+                    for org in condition.get("organ_systems", []) or []
+                ),
+            ]
+            text = " ".join(text_parts).lower()
+            if lower_query in text:
+                results.append(condition)
+                if len(results) >= max_results:
+                    break
+
+    if not results:
+        return f"No Supabase records found for '{query}'."
+
+    lines = []
+    for condition in results[:max_results]:
+        title = condition.get("condition_name") or condition.get("id") or "Unnamed condition"
+        description = condition.get("description", "No description available.")
+        tags = ", ".join(condition.get("tags", []) or []) or "None"
+        lines.append(f"Condition: {title}\nDescription: {description}\nTags: {tags}")
+
+    return "\n\n".join(lines)
+
+
 _TOOL_MAP = {
     "terminal":       lambda a: _terminal(a["command"]),
     "file_read":      lambda a: _file_read(a["path"]),
     "file_write":     lambda a: _file_write(a["path"], a["content"]),
-    "search_onenote": lambda a: _search_onenote(a["query"], a.get("max_results", 5)),
+    "search_supabase": lambda a: _search_supabase(a["query"], a.get("max_results", 5)),
 }
 
 

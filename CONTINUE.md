@@ -49,7 +49,7 @@ Flask backend + vanilla JS frontend. Üç ayrı sayfa sunar:
 - **`app.py`** — Flask uygulaması. Routing, model doğrulaması, asistan ve agent oturum yönetimi. Currently uses `qwen2.5-coder:3b` model from local Ollama.
 - **`llm.py`** — OpenAI istemcisi kurulumu ve `stream_llm()` fonksiyonu. Tek seferlik, history'siz.
 - **`asistan.py`** — `Asistan` sınıfı. Conversation history tutan, `sohbet()` ve `stream_sohbet()` metodları.
-- **`agent.py`** — `Agent` sınıfı. Tool-calling agentic loop; `calistir()` generator'ı her adımda event dict'i yield eder. Tool'lar: `terminal`, `dosya_oku`, `dosya_yaz`.
+- **`agent.py`** — `Agent` sınıfı. Tool-calling agentic loop; `calistir()` generator'ı her adımda event dict'i yield eder. Tool'lar: `terminal`, `dosya_oku`, `dosya_yaz`, `search_supabase`.
 - **`frontend/index.html`** — LLM arayüzü. Tek prompt → tek yanıt.
 - **`frontend/asistan.html`** — Sohbet arayüzü. Baloncuklu, çok turlu, session tabanlı.
 - **`frontend/agent.html`** — Agent arayüzü. Her adımı, tool call'ları, sonuçlarını ve thinking text'ini görsel olarak gösterir.

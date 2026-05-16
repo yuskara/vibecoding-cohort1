@@ -5,7 +5,7 @@ from typing import Iterator
 
 load_dotenv()
 
-OLLAMA_API_BASE = os.getenv("OLLAMA_API_BASE", "http://127.0.0.1:11434/v1")
+OLLAMA_API_BASE = os.getenv("OLLAMA_API_BASE")
 client_kwargs = {"base_url": OLLAMA_API_BASE}
 api_key = os.getenv("OPENAI_API_KEY")
 if api_key:

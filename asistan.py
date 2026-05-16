@@ -1,5 +1,6 @@
 #sudo apt update
-#sudo apt install nodejs npm from typing import Iterator
+#sudo apt install nodejs npm
+from typing import Iterator
 from llm import client
 
 

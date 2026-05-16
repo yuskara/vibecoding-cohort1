@@ -358,13 +358,14 @@
       <div>
         <label for="model">Model</label>
         <select id="model">
-          <option value="qwen2.5-coder:3b">qwen2.5-coder:7b</option>
-          <option value="qwen2.5-coder:7b">qwen2.5-coder:3b</option>
+          <option value="qwen2.5:7b">qwen2.5:7b ✓ tool-calling</option>
+          <option value="qwen2.5-coder:7b">qwen2.5-coder:7b</option>
+          <option value="qwen2.5-coder:3b">qwen2.5-coder:3b</option>
         </select>
       </div>
       <div>
         <label for="system">System Instructions</label>
-        <textarea id="system">You are a Healing KB agent. Use your tools (terminal, file_read, file_write) to complete tasks for wellness analysis and healing support. Provide helpful insights about emotional patterns and health conditions.</textarea>
+        <textarea id="system">You are a Healing KB agent. Use your tools (terminal, file_read, file_write,search_supabase) to complete tasks for wellness analysis and healing support. Provide helpful insights about emotional patterns and health conditions.</textarea>
       </div>
       <button id="baslatBtn" onclick="agentBaslat()">Start Agent</button>
     </div>
@@ -394,6 +395,7 @@
     const TOOL_ICONS = {
       terminal:   "⚡",
       file_read:  "📖",
+      file_write: "✏️",
       file_write: "✏️",
     };
 
