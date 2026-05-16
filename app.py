@@ -9,7 +9,7 @@ from agent import Agent
 FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "frontend")
 app = Flask(__name__, static_folder=FRONTEND_DIR)
 
-ALLOWED_MODELS = {"qwen2.5-coder:7b", "qwen2.5-coder:3b"}
+ALLOWED_MODELS = {"qwen2.5:7b", "qwen2.5-coder:7b"}
 # Aktif asistan oturumları: session_id -> Asistan nesnesi
 _asistanlar: dict[str, Asistan] = {}
 
